@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import jsonify
 import pymysql
 import os
 from dotenv import load_dotenv
@@ -9,8 +9,6 @@ DB_USER = os.getenv("DB_USER")
 DB_HOST = os.getenv("DB_HOST")
 DB_NAME = os.getenv("DB_NAME")
 
-app = Flask(__name__)
-
 def get_connection():
     return pymysql.connect(
         host=DB_HOST,
@@ -19,7 +17,6 @@ def get_connection():
         cursorclass=pymysql.cursors.DictCursor
     )
 
-@app.route("/jokes", methods=["GET"])
 def get_jokes():
     try:
         connection = get_connection()
@@ -33,7 +30,6 @@ def get_jokes():
         if 'connection' in locals() and connection.open:
             connection.close()
 
-@app.route("/jokes/<int:joke_id>", methods=["GET"])
 def get_joke(joke_id):
     try:
         connection = get_connection()
@@ -49,7 +45,3 @@ def get_joke(joke_id):
     finally:
         if 'connection' in locals() and connection.open:
             connection.close()
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
