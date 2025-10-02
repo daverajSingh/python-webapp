@@ -1,4 +1,3 @@
-from tkinter.constants import BROWSE
 
 from flask import jsonify
 import pymysql
