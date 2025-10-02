@@ -7,6 +7,12 @@ create table dadjokes(
     `punchline` VARCHAR(100)
 );
 
+CREATE TABLE users(
+	`id` INT auto_increment primary key,
+    `email` VARCHAR(30),
+    `password` VARCHAR(200)
+);
+
 INSERT INTO dadjokes (joke, punchline) VALUES
 ("Why was Cinderella so bad a football?", "She kept running away from the ball!"),
 ("What do you call a pile of cats?", "A meow-ntain"),

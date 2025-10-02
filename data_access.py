@@ -96,8 +96,9 @@ def login_user(email,password):
         with connection.cursor() as cursor:
             cursor.execute("SELECT password FROM users WHERE email = %s;", (email,))
             row = cursor.fetchone()
-            if check_password_hash(password, row["password"]):
-                return 200
+            hashed_password = row["password"]
+            if check_password_hash(hashed_password, password):
+                return [200]
             else:
                 return jsonify({"error": "Wrong password"}), 401
     except Exception as e:

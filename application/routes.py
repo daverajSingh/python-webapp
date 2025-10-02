@@ -89,4 +89,4 @@ def authenticate():
 @app.route('/authenticate_user/<string:email>&<string:password>', methods=['POST'])
 def authenticate_user(email, password):
     e = login_user(email, password)
-    return [email, password] if not e else e[0].json
+    return [email, password] if e[0] == 200 else e[0].json
