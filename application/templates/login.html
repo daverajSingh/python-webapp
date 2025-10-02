@@ -1,13 +1,11 @@
 {% extends "layout.html" %}
 {% block body_content %}
-  <h2>Login</h2>
+  <h2>User Login</h2>
   <form method="POST" action="/login">
-
         <label for="email">Email:</label><br>
         <input type="text" id="email" name="email" required><br><br>
         <label for="password">Password:</label><br>
         <input type="text" id="password" name="password" required><br><br>
-
       <button type="submit" class="button">Login</button>
   </form>
 {% endblock %}

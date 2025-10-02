@@ -96,13 +96,12 @@ def login_user(email,password):
         with connection.cursor() as cursor:
             cursor.execute("SELECT password FROM users WHERE email = %s;", (email,))
             row = cursor.fetchone()
+            if row is None:
+                return False
             hashed_password = row["password"]
-            if check_password_hash(hashed_password, password):
-                return [200]
-            else:
-                return jsonify({"error": "Wrong password"}), 401
+            return check_password_hash(hashed_password, password)
     except Exception as e:
-        return jsonify({"error": str(e), "pass":row["password"]}), 500
+        return jsonify({"error": str(e)}), 500
     finally:
         if 'connection' in locals() and connection.open:
             connection.close()

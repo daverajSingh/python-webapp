@@ -13,6 +13,10 @@ CREATE TABLE users(
     `password` VARCHAR(200)
 );
 
+Select * from users;
+
+SELECT password FROM users WHERE email = `d.nothay25@gmail.com`;
+
 INSERT INTO dadjokes (joke, punchline) VALUES
 ("Why was Cinderella so bad a football?", "She kept running away from the ball!"),
 ("What do you call a pile of cats?", "A meow-ntain"),
