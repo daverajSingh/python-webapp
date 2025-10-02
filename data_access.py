@@ -45,3 +45,14 @@ def get_joke(joke_id):
     finally:
         if 'connection' in locals() and connection.open:
             connection.close()
+
+def add_joke(joke, punchline):
+    try:
+        connection = get_connection()
+        with connection.cursor() as cursor:
+            cursor.execute("INSERT INTO dadjokes (joke, punchline) VALUES (%s, %s);", (joke,punchline))
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        if 'connection' in locals() and connection.open:
+            connection.close()
