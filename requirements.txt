@@ -4,3 +4,6 @@ flask_wtf
 pytest-cov
 python-dotenv
 pymysql
+pyjwt
+bcrypt
+werkzeug

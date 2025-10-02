@@ -4,12 +4,14 @@ from flask import jsonify
 import pymysql
 import os
 from dotenv import load_dotenv
+from werkzeug.security import generate_password_hash, check_password_hash
 
 load_dotenv()
 
 DB_USER = os.getenv("DB_USER")
 DB_HOST = os.getenv("DB_HOST")
 DB_NAME = os.getenv("DB_NAME")
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 def get_connection():
     return pymysql.connect(
@@ -70,6 +72,36 @@ def add_joke(joke, punchline):
             connection.commit()
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+    finally:
+        if 'connection' in locals() and connection.open:
+            connection.close()
+
+def create_new_user(email,password):
+    hashed_password = generate_password_hash(password=password, method='pbkdf2')
+    try:
+        connection = get_connection()
+        with connection.cursor() as cursor:
+            cursor.execute("INSERT INTO users (email, password) VALUES (%s, %s);", (email,hashed_password))
+            connection.commit()
+    except Exception as e:
+        return jsonify({"error": str(e), "pass": hashed_password}), 500
+    finally:
+        if 'connection' in locals() and connection.open:
+            connection.close()
+
+
+def login_user(email,password):
+    try:
+        connection = get_connection()
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT password FROM users WHERE email = %s;", (email,))
+            row = cursor.fetchone()
+            if check_password_hash(password, row["password"]):
+                return 200
+            else:
+                return jsonify({"error": "Wrong password"}), 401
+    except Exception as e:
+        return jsonify({"error": str(e), "pass":row["password"]}), 500
     finally:
         if 'connection' in locals() and connection.open:
             connection.close()

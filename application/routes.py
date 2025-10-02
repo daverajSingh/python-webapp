@@ -1,7 +1,7 @@
 from flask import render_template, request
 import random
 from application import app
-from data_access import get_jokes, get_joke, add_joke, get_joke_count
+from data_access import get_jokes, get_joke, add_joke, get_joke_count, create_new_user, login_user
 
 
 @app.route('/')
@@ -56,3 +56,37 @@ def get_all_jokes():
 def add_new_joke(joke, punchline):
     add_joke(joke, punchline)
     return [joke, punchline]
+
+# Login & Register
+
+@app.route('/register')
+def register():
+    return render_template('registration.html', title='Register')
+
+@app.route('/register_user', methods=['POST'])
+def register_user():
+    email = request.form['email']
+    password = request.form['password']
+    create_new_user(email, password)
+
+@app.route('/add_new_user/<string:email>&<string:password>', methods=['POST'])
+def add_new_user(email, password):
+    e = create_new_user(email, password)
+    return [email, password] if not e else e[0].json
+
+@app.route('/login')
+def login():
+    return render_template('login.html', title='Login')
+
+@app.route('/authenticate')
+def authenticate():
+    email = request.form['email']
+    password = request.form['password']
+    if login_user(email, password):
+        return render_template('home.html', title='Home')
+
+
+@app.route('/authenticate_user/<string:email>&<string:password>', methods=['POST'])
+def authenticate_user(email, password):
+    e = login_user(email, password)
+    return [email, password] if not e else e[0].json
