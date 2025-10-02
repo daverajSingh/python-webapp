@@ -1,0 +1,14 @@
+{% extends "layout.html" %}
+{% block body_content %}
+  <h2>Tell me a joke</h2>
+<p>Number of jokes: {{number_of_jokes}}</p>
+  <form method="POST" action="/insert_joke">
+
+        <label for="joke">Joke:</label><br>
+        <input type="text" id="joke" name="joke" required><br><br>
+        <label for="punchline">Punchline:</label><br>
+        <input type="text" id="punchline" name="punchline" required><br><br>
+
+      <button type="submit" class="button">Insert new joke</button>
+  </form>
+{% endblock %}

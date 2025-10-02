@@ -1,3 +1,5 @@
+from tkinter.constants import BROWSE
+
 from flask import jsonify
 import pymysql
 import os
@@ -30,6 +32,21 @@ def get_jokes():
         if 'connection' in locals() and connection.open:
             connection.close()
 
+def get_joke_count():
+    try:
+        connection = get_connection()
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT COUNT(*) as joke_count FROM dadjokes;")
+            rows = cursor.fetchall()
+        return jsonify(rows), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+    finally:
+        if 'connection' in locals() and connection.open:
+            connection.close()
+
+
+
 def get_joke(joke_id):
     try:
         connection = get_connection()
@@ -51,6 +68,7 @@ def add_joke(joke, punchline):
         connection = get_connection()
         with connection.cursor() as cursor:
             cursor.execute("INSERT INTO dadjokes (joke, punchline) VALUES (%s, %s);", (joke,punchline))
+            connection.commit()
     except Exception as e:
         return jsonify({"error": str(e)}), 500
     finally:

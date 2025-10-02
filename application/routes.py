@@ -1,7 +1,7 @@
-from flask import render_template
+from flask import render_template, request
 import random
 from application import app
-from data_access import get_jokes, get_joke
+from data_access import get_jokes, get_joke, add_joke, get_joke_count
 
 
 @app.route('/')
@@ -15,15 +15,30 @@ def welcome(name='Team'):
     return render_template('welcome.html', title="Welcome", name=name.title(), group='Everyone')
 
 
-@app.route('/joke')
+@app.route('/joke', methods=['GET'])
 def joke():
-    joke_number = random.randrange(21)
-    joke = get_joke(joke_number)
-    joke_question = joke[0].json['joke']
-    joke_answer = joke[0].json['punchline']
-    return render_template('joke.html', title="Joke Time", joke_question=joke_question, joke_answer=joke_answer, number_of_jokes=21)
 
-       
+    all_jokes = get_jokes()
+    random_joke = random.choice(all_jokes[0].json)
+    joke_question = random_joke['joke']
+    joke_answer = random_joke['punchline']
+    joke_count_json = get_joke_count()
+    joke_count = joke_count_json[0].json[0]['joke_count']
+    return render_template('joke.html', title="Joke Time", joke_question=joke_question, joke_answer=joke_answer, number_of_jokes=joke_count)
+
+@app.route('/add_joke')
+def new_joke():
+    # joke = request.form['joke']
+    return render_template('insert_joke.html', title="Insert joke")
+
+@app.route('/insert_joke', methods=['POST'])
+def insert_joke():
+    joke = request.form['joke']
+    punchline = request.form['punchline']
+    add_joke(joke, punchline)
+    return render_template('insert_joke.html', title="Insert joke")
+
+
 @app.route('/hello')
 def hello():
     return render_template('hello.html', title='Hello')
