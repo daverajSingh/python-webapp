@@ -15,9 +15,8 @@ def welcome(name='Team'):
     return render_template('welcome.html', title="Welcome", name=name.title(), group='Everyone')
 
 
-@app.route('/joke', methods=['GET'])
+@app.route('/joke')
 def joke():
-
     all_jokes = get_jokes()
     random_joke = random.choice(all_jokes[0].json)
     joke_question = random_joke['joke']
@@ -42,3 +41,18 @@ def insert_joke():
 @app.route('/hello')
 def hello():
     return render_template('hello.html', title='Hello')
+
+@app.route('/get_joke/<int:joke_id>', methods=['GET'])
+def get_joke_id(joke_id):
+    joke = get_joke(joke_id)
+    return joke[0].json
+
+@app.route('/get_all_jokes', methods=['GET'])
+def get_all_jokes():
+    all_jokes = get_jokes()
+    return all_jokes[0].json
+
+@app.route('/add_new_joke/<string:joke>&<string:punchline>', methods=['POST'])
+def add_new_joke(joke, punchline):
+    add_joke(joke, punchline)
+    return [joke, punchline]

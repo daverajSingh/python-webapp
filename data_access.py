@@ -46,7 +46,6 @@ def get_joke_count():
             connection.close()
 
 
-
 def get_joke(joke_id):
     try:
         connection = get_connection()
